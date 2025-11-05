@@ -6,34 +6,40 @@ import * as goodsAPI from './api/goods';
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
+  const [error, setError] = useState<string>('');
+
+  const handleError = (message: string) => {
+    setError(message);
+    setGoods([]);
+  };
 
   const handleLoadAll = () => {
+    setError('');
     goodsAPI
       .getAll()
       .then(setGoods)
       .catch(() => {
-        console.error('Erro ao carregar os produtos');
-        setGoods([]);
+        handleError('Erro ao carregar os produtos');
       });
   };
 
   const handleLoadFirst5 = () => {
+    setError('');
     goodsAPI
       .get5First()
       .then(setGoods)
       .catch(() => {
-        console.error('Erro ao carregar os 5 primeiros produtos');
-        setGoods([]);
+        handleError('Erro ao carregar os 5 primeiros produtos');
       });
   };
 
   const handleLoadRed = () => {
+    setError('');
     goodsAPI
       .getRedGoods()
       .then(setGoods)
       .catch(() => {
-        console.error('Erro ao carregar os produtos vermelhos');
-        setGoods([]);
+        handleError('Erro ao carregar os produtos vermelhos');
       });
   };
 
@@ -41,22 +47,25 @@ export const App: React.FC = () => {
     <div className="App">
       <h1>Dynamic list of Goods</h1>
 
-      <button type="button" data-cy="all-button" onClick={handleLoadAll}>
-        Load all goods
-      </button>
+      <div className="buttons">
+        <button type="button" data-cy="all-button" onClick={handleLoadAll}>
+          Load all goods
+        </button>
 
-      <button
-        type="button"
-        data-cy="first-five-button"
-        onClick={handleLoadFirst5}
-      >
-        Load 5 first goods
-      </button>
+        <button
+          type="button"
+          data-cy="first-five-button"
+          onClick={handleLoadFirst5}
+        >
+          Load 5 first goods
+        </button>
 
-      <button type="button" data-cy="red-button" onClick={handleLoadRed}>
-        Load red goods
-      </button>
+        <button type="button" data-cy="red-button" onClick={handleLoadRed}>
+          Load red goods
+        </button>
+      </div>
 
+      {error && <p className="error-message">{error}</p>}
       <GoodsList goods={goods} />
     </div>
   );
