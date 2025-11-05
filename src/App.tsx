@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.scss';
-import { GoodsList } from './GoodsList';
+import { MemoizedGoodsList as GoodsList } from './GoodsList';
 import { Good } from './types/Good';
 import * as goodsAPI from './api/goods';
 
@@ -8,15 +8,33 @@ export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
 
   const handleLoadAll = () => {
-    goodsAPI.getAll().then(setGoods);
+    goodsAPI
+      .getAll()
+      .then(setGoods)
+      .catch(() => {
+        console.error('Erro ao carregar os produtos');
+        setGoods([]);
+      });
   };
 
   const handleLoadFirst5 = () => {
-    goodsAPI.get5First().then(setGoods);
+    goodsAPI
+      .get5First()
+      .then(setGoods)
+      .catch(() => {
+        console.error('Erro ao carregar os 5 primeiros produtos');
+        setGoods([]);
+      });
   };
 
   const handleLoadRed = () => {
-    goodsAPI.getRedGoods().then(setGoods);
+    goodsAPI
+      .getRedGoods()
+      .then(setGoods)
+      .catch(() => {
+        console.error('Erro ao carregar os produtos vermelhos');
+        setGoods([]);
+      });
   };
 
   return (
